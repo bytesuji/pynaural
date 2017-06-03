@@ -5,6 +5,21 @@ from beat_gen import BeatGenerator
 from threading import Thread
 
 
+GENERATOR = BeatGenerator()
+
+
+def show_object(widget, data):
+    data.show()
+
+def hide_object(widget, data):
+    data.hide()
+
+
+def pause(widget):
+    global GENERATOR
+    GENERATOR.pause()
+
+
 def create_and_play(widget, data):
     carrier_box  = data[0]
     beat_box     = data[1] ## boots n cats n boots n cats
@@ -14,8 +29,12 @@ def create_and_play(widget, data):
     beat_freq    = float(beat_box.get_text())
     duration     = float(duration_box.get_text())
 
-    generator = BeatGenerator(carrier=carrier_freq, beat_freq=beat_freq, duration=duration)    
-    t = Thread(target=generator.play)
+    global GENERATOR
+    GENERATOR.__init__(carrier=carrier_freq, duration=duration, beat_freq=beat_freq)
+
+    # generator = BeatGenerator(carrier=carrier_freq, beat_freq=beat_freq, duration=duration)    
+    # t = Thread(target=generator.play)
+    t = Thread(target=GENERATOR.play)
     t.start()
 
 
@@ -25,15 +44,23 @@ def main():
 
     main_window     = builder.get_object('main_window')
     main_play       = builder.get_object('main_play')
+    main_stop       = builder.get_object('main_stop')
     carrier_freq    = builder.get_object('carrier_freq')
     beat_freq       = builder.get_object('beat_freq')
     duration        = builder.get_object('duration')
     file_quit       = builder.get_object('file_quit')
+    help_about      = builder.get_object('help_about')
+
+    about_window    = builder.get_object('about_window')
 
     main_window.connect('destroy', gtk.main_quit)
     file_quit.connect('activate', gtk.main_quit)
+    help_about.connect('activate', show_object, about_window)
     main_play.connect('clicked', create_and_play,
         (carrier_freq, beat_freq, duration))
+    main_stop.connect('clicked', pause)
+
+    about_window.connect('destroy', hide_object, about_window)
 
     gtk.main()
 

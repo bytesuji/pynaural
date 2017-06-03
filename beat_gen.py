@@ -16,6 +16,10 @@ class BeatGenerator(object):
 
         self.frequencies = (self.carrier, self.carrier + self.beat_freq)
 
+        self.pa = pyaudio.PyAudio()
+        self.stream = self.pa.open(format=pyaudio.paFloat32, channels=2,
+            rate=self.sampling_rate, output=1)
+
     def create_chunk(self, channel):
         """Makes a `chunk` (audio data in byte format) based on the given channel.
         Takes a char as arg, returns an np.array (char must be in ('l', 'r'))"""
@@ -35,19 +39,23 @@ class BeatGenerator(object):
 
     def write_stream(self, stream):
         """Relatively self-explanatory function. `stream` must be a pyaudio stream."""
-        left = self.create_chunk('l')
-        right = self.create_chunk('r')
+        try:
+            left = self.create_chunk('l')
+            right = self.create_chunk('r')
 
-        for i in range(len(left)):
-            stereo = struct.pack("2f", left[i] * self.vol, right[i] * self.vol)
-            stream.write(stereo)         
+            for i in range(len(left)):
+                stereo = struct.pack("2f", left[i] * self.vol, right[i] * self.vol)
+                stream.write(stereo)
+        except OSError:
+        ## This try-except block is to keep the program from throwing errors when the stop button is pressed, 
+        ## as doing so produces a totally harmless OSError (still not something you want the end user seeing,
+        ## though.
+            pass
 
     def play(self):
         """Plays the binaural beat with which the class was instantiated."""
-        p = pyaudio.PyAudio() 
-        stream = p.open(format=pyaudio.paFloat32, channels=2, rate=self.sampling_rate, output=1)
-        self.write_stream(stream)
+        self.write_stream(self.stream)
+        self.stream.stop_stream()
 
-        stream.stop_stream()
-        stream.close()
-        p.terminate()
+    def pause(self):
+        self.stream.stop_stream()
