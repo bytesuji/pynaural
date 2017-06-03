@@ -17,7 +17,6 @@ def create_and_play(widget, data):
     generator = BeatGenerator(carrier=carrier_freq, beat_freq=beat_freq, duration=duration)    
     t = Thread(target=generator.play)
     t.start()
-    t.join()
 
 
 def main():
@@ -29,8 +28,10 @@ def main():
     carrier_freq    = builder.get_object('carrier_freq')
     beat_freq       = builder.get_object('beat_freq')
     duration        = builder.get_object('duration')
+    file_quit       = builder.get_object('file_quit')
 
     main_window.connect('destroy', gtk.main_quit)
+    file_quit.connect('activate', gtk.main_quit)
     main_play.connect('clicked', create_and_play,
         (carrier_freq, beat_freq, duration))
 
