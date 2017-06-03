@@ -18,6 +18,8 @@ class BeatGenerator(object):
         self.frequencies = (self.carrier, self.carrier + self.beat_freq)
 
     def create_chunk(self, channel):
+        """Makes a `chunk` (audio data in byte format) based on the given channel.
+        Takes a char as arg, returns an np.array (char must be in ('l', 'r'))"""
         if channel == 'l':
             freq = self.frequencies[0]
         elif channel == 'r':
@@ -33,6 +35,7 @@ class BeatGenerator(object):
         return chunk
 
     def write_stream(self, stream):
+        """Relatively self-explanatory function. `stream` must be a pyaudio stream."""
         left = self.create_chunk('l')
         right = self.create_chunk('r')
 
@@ -41,7 +44,8 @@ class BeatGenerator(object):
             stream.write(stereo)         
 
     def play(self):
-        p = pyaudio.PyAudio() ## should be moved to __init__ in future
+        """Plays the binaural beat with which the class was instantiated."""
+        p = pyaudio.PyAudio() 
         stream = p.open(format=pyaudio.paFloat32, channels=2, rate=self.sampling_rate, output=1)
         self.write_stream(stream)
 
