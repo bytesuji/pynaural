@@ -1,2 +1,2 @@
 # pynaural
-simple binaural beat generator I wrote as a replacement for gnaural
+Simple binaural beat generator I wrote as a much simpler alternative to [Gnaural](http://gnaural.sourceforge.net/).
