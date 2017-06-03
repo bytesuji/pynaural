@@ -1,1 +1,3 @@
 - display error for duration below 1 second
+- make About display properly upon multiple opens & change window title
+- fix high CPU usage (see main.py:write_stream)
