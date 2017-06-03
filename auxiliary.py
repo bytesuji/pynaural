@@ -5,7 +5,7 @@ from threading import Thread
 from main import GENERATOR
 
 def show_object(widget, data):
-    data.show()
+    data.show_all()
 
 
 def hide_object(widget, data):
