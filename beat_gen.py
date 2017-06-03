@@ -4,7 +4,6 @@ import numpy as np
 
 
 class BeatGenerator(object):
-    """This class is what the GUI calls to do the actual beat generation."""
     def __init__(self, vol=0.5, carrier=400, beat_freq=15.0, duration=10, sampling_rate=44100):
         """`vol` is self-explanatory. `carrier` is the frequency (in Hz) played through the 
         left channel; the frequency played through the right is equivalent to `carrier + beat_freq`.
