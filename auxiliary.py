@@ -4,11 +4,16 @@ from gi.repository import Gtk as gtk
 from threading import Thread
 from main import GENERATOR
 
+
 def show_object(widget, data):
     data.show_all()
 
-
 def hide_object(widget, data):
+    data.hide()
+
+
+def dialog_run(widget, data):
+    data.run()
     data.hide()
 
 

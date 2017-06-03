@@ -23,12 +23,10 @@ def main():
 
     main_window.connect('destroy', full_quit)
     file_quit.connect('activate', full_quit)
-    help_about.connect('activate', show_object, about_window)
+    help_about.connect('activate', dialog_run, about_window)
     main_play.connect('clicked', create_and_play,
         (carrier_freq, beat_freq, duration))
     main_stop.connect('clicked', pause)
-
-    about_window.connect('destroy', hide_object, about_window)
 
     gtk.main()
 
