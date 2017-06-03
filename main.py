@@ -2,41 +2,9 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk as gtk
 from beat_gen import BeatGenerator
-from threading import Thread
-
+from auxiliary import *
 
 GENERATOR = BeatGenerator()
-
-
-def show_object(widget, data):
-    data.show()
-
-def hide_object(widget, data):
-    data.hide()
-
-
-def pause(widget):
-    global GENERATOR
-    GENERATOR.pause()
-
-
-def create_and_play(widget, data):
-    carrier_box  = data[0]
-    beat_box     = data[1] ## boots n cats n boots n cats
-    duration_box = data[2]
-
-    carrier_freq = float(carrier_box.get_text())
-    beat_freq    = float(beat_box.get_text())
-    duration     = float(duration_box.get_text())
-
-    global GENERATOR
-    GENERATOR.__init__(carrier=carrier_freq, duration=duration, beat_freq=beat_freq)
-
-    # generator = BeatGenerator(carrier=carrier_freq, beat_freq=beat_freq, duration=duration)    
-    # t = Thread(target=generator.play)
-    t = Thread(target=GENERATOR.play)
-    t.start()
-
 
 def main():
     builder = gtk.Builder()
@@ -53,8 +21,8 @@ def main():
 
     about_window    = builder.get_object('about_window')
 
-    main_window.connect('destroy', gtk.main_quit)
-    file_quit.connect('activate', gtk.main_quit)
+    main_window.connect('destroy', full_quit)
+    file_quit.connect('activate', full_quit)
     help_about.connect('activate', show_object, about_window)
     main_play.connect('clicked', create_and_play,
         (carrier_freq, beat_freq, duration))
