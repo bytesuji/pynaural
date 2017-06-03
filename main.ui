@@ -205,10 +205,10 @@ All rights reserved.</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="margin_left">2</property>
+                <property name="margin_left">4</property>
                 <property name="margin_right">2</property>
                 <property name="margin_top">2</property>
-                <property name="margin_bottom">3</property>
+                <property name="margin_bottom">5</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -223,9 +223,9 @@ All rights reserved.</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="margin_left">2</property>
-                <property name="margin_right">2</property>
+                <property name="margin_right">4</property>
                 <property name="margin_top">2</property>
-                <property name="margin_bottom">3</property>
+                <property name="margin_bottom">5</property>
               </object>
               <packing>
                 <property name="expand">True</property>

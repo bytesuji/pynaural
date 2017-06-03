@@ -1,3 +1,4 @@
+import time
 import struct
 import sounddevice as sd
 import numpy as np
@@ -27,13 +28,7 @@ class BeatGenerator(object):
             raise AttributeError("Invalid channel.")
 
         scale = float(freq) * 2 * np.pi / self.sampling_rate
-        waveform_snippet = np.sin(np.arange(self.sampling_rate) * scale) ## generate a one-second snippet
-        waveform = []
-
-        for i in range(self.duration):
-            waveform = np.concatenate([waveform, waveform_snippet]) 
-            ## append snippet to itself so duration is same as requested
-            ## using this loop saves a lot of computational effort
+        waveform = np.sin(np.arange(self.sampling_rate) * scale) ## generate a one-second snippet
 
         chunks = [waveform]
         chunk = np.concatenate(chunks)
@@ -47,7 +42,13 @@ class BeatGenerator(object):
         stereo = np.array([left, right]).transpose()
 
         sd.default.channels = 2
-        sd.play(stereo, self.sampling_rate)
+
+        if self.duration is -1:
+            sd.play(stereo, self.sampling_rate, loop=True)
+        else:
+            sd.play(stereo, self.sampling_rate, loop=True)
+            time.sleep(self.duration)
+            sd.stop()
 
     def pause(self):
         sd.stop()
