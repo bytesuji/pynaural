@@ -27,25 +27,27 @@ class BeatGenerator(object):
             raise AttributeError("Invalid channel.")
 
         scale = float(freq) * 2 * np.pi / self.sampling_rate
-        waveform = np.sin(np.arange(self.sampling_rate * self.duration) * scale)
+        waveform_snippet = np.sin(np.arange(self.sampling_rate) * scale) ## generate a one-second snippet
+        waveform = []
+
+        for i in range(self.duration):
+            waveform = np.concatenate([waveform, waveform_snippet]) 
+            ## append snippet to itself so duration is same as requested
+            ## using this loop saves a lot of computational effort
+
         chunks = [waveform]
         chunk = np.concatenate(chunks)
-        ## doesn't seem to cause the CPU spike
 
         return chunk
-
-        left = self.create_chunk('l')
-        right = self.create_chunk('r')
-        stereo = np.array([left, right]).reshape(-1, 2)
 
     def play(self):
         """Plays the binaural beat according to the settings with which the class was instantiated."""
         left = self.create_chunk('l')
         right = self.create_chunk('r')
-        stereo = np.array([left, right]).reshape(-1, 2)
-        print(stereo.shape)
+        stereo = np.array([left, right]).transpose()
 
-        sd.play(stereo, self.sampling_rate, mapping=(1, 2))
+        sd.default.channels = 2
+        sd.play(stereo, self.sampling_rate)
 
     def pause(self):
         sd.stop()

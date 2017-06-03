@@ -29,7 +29,7 @@ def create_and_play(widget, data):
 
     carrier_freq = float(carrier_box.get_text())
     beat_freq    = float(beat_box.get_text())
-    duration     = float(duration_box.get_text())
+    duration     = int(round(float(duration_box.get_text()), 0))
 
     global GENERATOR
     GENERATOR.__init__(carrier=carrier_freq, duration=duration, beat_freq=beat_freq)
