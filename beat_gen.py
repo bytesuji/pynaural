@@ -1,5 +1,4 @@
 import time
-import struct
 import sounddevice as sd
 import numpy as np
 
