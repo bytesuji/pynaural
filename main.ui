@@ -9,8 +9,8 @@
     <property name="version">v0.7</property>
     <property name="copyright" translatable="yes">Copyright (c) 2017, exypnoTech
 All rights reserved.</property>
-    <property name="website">http://exypno.tech/pynaural</property>
-    <property name="website_label" translatable="yes">Website</property>
+    <property name="website">https://github.com/drop-table-users/pynaural</property>
+    <property name="website_label" translatable="yes">GitHub</property>
     <property name="authors">Albert Brox III</property>
     <property name="logo_icon_name">headphones-symbolic</property>
     <property name="license_type">bsd</property>
