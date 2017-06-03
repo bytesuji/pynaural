@@ -40,6 +40,7 @@ class BeatGenerator(object):
         left = self.create_chunk('l')
         right = self.create_chunk('r')
         stereo = np.array([left, right]).transpose()
+        stereo *= self.vol
 
         sd.default.channels = 2
 

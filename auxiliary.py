@@ -28,17 +28,29 @@ def pause(widget):
 
 
 def create_and_play(widget, data):
-    carrier_box  = data[0]
-    beat_box     = data[1] ## boots n cats n boots n cats
-    duration_box = data[2]
+    carrier_box   = data[0]
+    beat_box      = data[1] ## boots n cats n boots n cats
+    duration_box  = data[2]
+    volume_adjust = data[3]
 
-    carrier_freq = float(carrier_box.get_text())
-    beat_freq    = float(beat_box.get_text())
-    duration     = int(round(float(duration_box.get_text()), 0))
+    carrier_freq  = float(carrier_box.get_text())
+    beat_freq     = float(beat_box.get_text())
+    duration      = int(round(float(duration_box.get_text()), 0))
+    volume        = int(volume_adjust.get_value()) / 100
 
     global GENERATOR
-    GENERATOR.__init__(carrier=carrier_freq, duration=duration, beat_freq=beat_freq)
+    GENERATOR.__init__(carrier=carrier_freq, duration=duration, beat_freq=beat_freq, vol=volume)
 
     t = Thread(target=GENERATOR.play)
     t.daemon = True
     t.start()
+
+
+def update_volume(widget, data):
+    volume = int(data.get_value()) / 100
+
+    global GENERATOR
+    GENERATOR.vol = volume
+    GENERATOR.pause()
+    GENERATOR.play()
+
