@@ -2,6 +2,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk as gtk
 from beat_gen import BeatGenerator
+from multiprocessing import Process
 
 
 def create_and_play(widget, data):
@@ -14,7 +15,10 @@ def create_and_play(widget, data):
     duration     = float(duration_box.get_text())
 
     generator = BeatGenerator(carrier=carrier_freq, beat_freq=beat_freq, duration=duration)    
-    generator.play()
+    p = Process(target=generator.play)
+    p.start()
+    p.join()
+    # generator.play()
 
 
 def main():
