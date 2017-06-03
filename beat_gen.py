@@ -1,5 +1,5 @@
 import struct
-import pyaudio
+import sounddevice as sd
 import numpy as np
 
 
@@ -16,10 +16,6 @@ class BeatGenerator(object):
 
         self.frequencies = (self.carrier, self.carrier + self.beat_freq)
 
-        self.pa = pyaudio.PyAudio()
-        self.stream = self.pa.open(format=pyaudio.paFloat32, channels=2,
-            rate=self.sampling_rate, output=1)
-
     def create_chunk(self, channel):
         """Makes a `chunk` (audio data in byte format) based on the given channel.
         Takes a char as arg, returns an np.array (char must be in ('l', 'r'))"""
@@ -31,47 +27,25 @@ class BeatGenerator(object):
             raise AttributeError("Invalid channel.")
 
         scale = float(freq) * 2 * np.pi / self.sampling_rate
-        if self.duration < 3:
-            waveform = np.sin(np.arange(self.sampling_rate * self.duration) * scale)
-        else:
-            waveform = np.sin(np.arange(self.sampling_rate * 1) * scale)
+        waveform = np.sin(np.arange(self.sampling_rate * self.duration) * scale)
         chunks = [waveform]
         chunk = np.concatenate(chunks)
         ## doesn't seem to cause the CPU spike
 
         return chunk
 
-    def write_stream(self, stream):
-        """Relatively self-explanatory function. `stream` must be a pyaudio stream."""
-        try:
-            left = self.create_chunk('l')
-            right = self.create_chunk('r')
-            stereo = []
-
-            for l, r in zip(left, right):
-                packet = struct.pack("2f", l*self.vol, r*self.vol)
-                stereo.append(packet) 
-
-            if self.duration < 3:
-                for packet in stereo:
-                    stream.write(packet)
-
-            ## instead of directly generating and packing long sequences of data, we just generate/pack a
-            ## one-second snippet and repeat that for as many seconds as the user specified. this saves resources.
-            else:
-                for i in range(int(self.duration)):
-                    for packet in stereo:
-                        stream.write(packet)
-
-        except OSError:
-        ## This try-except block is to keep the program from throwing errors when the stop button is pressed, 
-        ## as doing so produces a totally harmless OSError.
-            pass
+        left = self.create_chunk('l')
+        right = self.create_chunk('r')
+        stereo = np.array([left, right]).reshape(-1, 2)
 
     def play(self):
         """Plays the binaural beat according to the settings with which the class was instantiated."""
-        self.write_stream(self.stream)
-        self.stream.stop_stream()
+        left = self.create_chunk('l')
+        right = self.create_chunk('r')
+        stereo = np.array([left, right]).reshape(-1, 2)
+        print(stereo.shape)
+
+        sd.play(stereo, self.sampling_rate, mapping=(1, 2))
 
     def pause(self):
-        self.stream.stop_stream()
+        sd.stop()
