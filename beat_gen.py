@@ -34,6 +34,7 @@ class BeatGenerator(object):
         waveform = np.sin(np.arange(self.sampling_rate * self.duration) * scale)
         chunks = [waveform]
         chunk = np.concatenate(chunks)
+        ## doesn't seem to cause the CPU spike
 
         return chunk
 
@@ -43,13 +44,14 @@ class BeatGenerator(object):
             left = self.create_chunk('l')
             right = self.create_chunk('r')
 
-            for i in range(len(left)):
-                stereo = struct.pack("2f", left[i] * self.vol, right[i] * self.vol)
+            for l, r in zip(left, right):
+                stereo = struct.pack("2f", l*self.vol, r*self.vol)
                 stream.write(stereo)
+
         except OSError:
         ## This try-except block is to keep the program from throwing errors when the stop button is pressed, 
         ## as doing so produces a totally harmless OSError (still not something you want the end user seeing,
-        ## though.
+        ## though).
             pass
 
     def play(self):
