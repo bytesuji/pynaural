@@ -47,7 +47,11 @@ class BeatGenerator(object):
             sd.play(stereo, self.sampling_rate, loop=True)
         else:
             sd.play(stereo, self.sampling_rate, loop=True)
-            time.sleep(self.duration)
+            try:
+                time.sleep(self.duration)
+            except ValueError:
+                self.duration = abs(self.duration)
+                self.play()
             sd.stop()
 
     def pause(self):
