@@ -49,12 +49,9 @@ class BeatGenerator(object):
 
         sd.default.channels = 2
 
-        if self.duration is -1:
-            sd.play(stereo, self.sampling_rate, loop=True)
-        else:
-            sd.play(stereo, self.sampling_rate, loop=True)
-            try:
-                time.sleep(self.duration)
+        sd.play(stereo, self.sampling_rate, loop=True)
+        if self.duration is not -1:
+            try: time.sleep(self.duration)
             except ValueError:
                 self.duration = abs(self.duration)
                 self.play()
