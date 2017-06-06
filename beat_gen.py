@@ -8,6 +8,7 @@ class BeatGenerator(object):
         """`vol` is self-explanatory. `carrier` is the frequency (in Hz) played through the 
         left channel; the frequency played through the right is equivalent to `carrier + beat_freq`.
         `sampling_rate` probably will never be needed."""
+
         self.vol = vol
         self.duration = duration
         self.carrier = carrier
@@ -19,6 +20,7 @@ class BeatGenerator(object):
     def create_chunk(self, channel):
         """Makes a `chunk` (audio data in byte format) based on the given channel.
         Takes a char as arg, returns an np.array (char must be in ('l', 'r'))"""
+
         if channel == 'l':
             freq = self.frequencies[0]
         elif channel == 'r':
@@ -35,7 +37,11 @@ class BeatGenerator(object):
         return chunk
 
     def play(self):
-        """Plays the binaural beat according to the settings with which the class was instantiated."""
+        """Plays the binaural beat according to the settings with which the class was instantiated. 
+        Instead of generating a chunk which is the same duration as the user requested, this method
+        generates a one-second snippet w/ the requested frequencies and then plays that snippet 
+        in an infinite loop, time.sleeps for the requested duration, then stops all audio output."""
+
         left = self.create_chunk('l')
         right = self.create_chunk('r')
         stereo = np.array([left, right]).transpose()
