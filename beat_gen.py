@@ -1,3 +1,27 @@
+# Copyright (c) 2017, Albert Brox III
+# All rights reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 
+# * Redistributions of source code must retain the above copyright notice, this
+#   list of conditions and the following disclaimer.
+# 
+# * Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 import time
 import sounddevice as sd
 import numpy as np
@@ -5,10 +29,6 @@ import numpy as np
 
 class BeatGenerator(object):
     def __init__(self, vol=0.5, carrier=400, beat_freq=15.0, duration=10, sampling_rate=44100):
-        """`vol` is self-explanatory. `carrier` is the frequency (in Hz) played through the 
-        left channel; the frequency played through the right is equivalent to `carrier + beat_freq`.
-        `sampling_rate` probably will never be needed."""
-
         self.vol = vol
         self.duration = duration
         self.carrier = carrier
@@ -18,9 +38,6 @@ class BeatGenerator(object):
         self.frequencies = (self.carrier, self.carrier + self.beat_freq)
 
     def create_chunk(self, channel):
-        """Makes a `chunk` (audio data in byte format) based on the given channel.
-        Takes a char as arg, returns an np.array (char must be in ('l', 'r'))"""
-
         if channel == 'l':
             freq = self.frequencies[0]
         elif channel == 'r':
@@ -37,11 +54,6 @@ class BeatGenerator(object):
         return chunk
 
     def play(self):
-        """Plays the binaural beat according to the settings with which the class was instantiated. 
-        Instead of generating a chunk which is the same duration as the user requested, this method
-        generates a one-second snippet w/ the requested frequencies and then plays that snippet 
-        in an infinite loop, time.sleeps for the requested duration, then stops all audio output."""
-
         left = self.create_chunk('l')
         right = self.create_chunk('r')
         stereo = np.array([left, right]).transpose()
