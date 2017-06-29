@@ -1,8 +1,8 @@
+from __future__ import print_function ## so people can maybe run it w/ py2
 import os
 import sys
 from shutil import copy2
 from shutil import rmtree
-from __future__ import print_function ## so people can maybe run it w/ py2
 
 
 def print_and_install(module):
