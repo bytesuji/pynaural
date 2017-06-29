@@ -2,17 +2,15 @@ import os
 import sys
 from shutil import copy2
 from shutil import rmtree
-
-
-def check_pip():
-    try: import pip
-    except ImportError:
-        print("Please install pip to use this install script.")
-        exit(-1)
+from __future__ import print_function ## so people can maybe run it w/ py2
 
 
 def print_and_install(module):
-    check_pip()
+    try: import pip
+    except ImportError:
+        print("Please install pip to use this script.")
+        exit(-1)
+
     print(module, "is missing. Installing via pip...")
     pip.main(['install', module])
 
